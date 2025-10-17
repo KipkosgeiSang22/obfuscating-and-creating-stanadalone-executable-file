@@ -1,0 +1,8 @@
+{   
+    "Client A": {
+        "base_url": "https://{your siem  url}"
+    },
+    "Client B": {
+         "base_url": "https://{your siem url}"
+    }
+}
