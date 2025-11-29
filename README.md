@@ -1,88 +1,77 @@
-# Obfuscating and Packaging a Python Script with Cython and PyInstaller
+# Steps to Compile and Package Your Python Module
 
-This guide outlines the steps to obfuscate your Python logic using Cython, compile it into a `.pyd` extension, and package it into a standalone `.exe` using PyInstaller.
+## 1. Create `setup.py`
+This compiles your `.pyx` file into a `.pyd` extension module using Cython.
 
----
+    ```python
+    from setuptools import setup
+    from Cython.Build import cythonize
 
-## 🛠️ Step 1: Create `setup.py`
+    setup(
+        ext_modules=cythonize("checkcp311_win_amd64.pyx", compiler_directives={'language_level': "3"})
+    )
 
-This script compiles your `.pyx` file into a `.pyd` extension module using Cython.
+Note: Make sure the .pyx file is named exactly checkcp311_win_amd64.pyx.
 
-```python
-from setuptools import setup
-from Cython.Build import cythonize
-
-setup(
-    ext_modules=cythonize("checkcp311_win_amd64.pyx", compiler_directives={'language_level': "3"})
-)
-
-
-✅ Make sure the .pyx file is named exactly: checkcp311_win_amd64.pyx
-
-🔄 Step 2: Refactor Your Logic into a Callable Module
-Rename your original check.py to:
-checkcp311_win_amd64.pyx
-
-
+2. Refactor Your Logic into a Callable Module
+Rename your original check.py to checkcp311_win_amd64.pyx.
 Replace the entry point:
 From:
+python
 if __name__ == "__main__":
     asyncio.run(main())
 
+Run
 
 To:
+python
 def run():
     asyncio.run(main())
 
+Run
 
-This makes the module callable from a launcher script.
+This modification makes the module callable from a launcher script.
 
-🚀 Step 3: Create a Lightweight Launcher (check.py)
-import checkcp311_win_amd64 as core  # Match the name of your compiled .pyd
+3. Create a Lightweight Launcher: check.py
+    ```python
+    import checkcp311_win_amd64 as core  # Match the name of your compiled .pyd
 
-core.run()
+    core.run()
 
+Run
 
 This script will be packaged into the .exe and will call your obfuscated logic.
 
-⚙️ Step 4: Compile the .pyx into .pyd
-Run:
-python setup.py build_ext --inplace
+4. Compile the .pyx into .pyd
+Run the following command:
 
+    ```bash
+    python setup.py build_ext --inplace
 
 This generates:
+
 checkcp311_win_amd64.cp311-win_amd64.pyd
 
+Rename it to: checkcp311_win_amd64.pyd.
 
-✅ Rename it to:
-checkcp311_win_amd64.pyd
+5. Package with PyInstaller
+To package the file alone without the JSON file it depends on. Console window is displayed:
 
+    ```bash
+    pyinstaller --onefile --hidden-import=aiohttp --hidden-import=pandas --add-binary "checkcp311_win_amd64.pyd;." check.py
 
+To package the file alone without the JSON file; hidden console window:
 
-📦 Step 5: Package with PyInstaller
-Run:
-pyinstaller --onefile --hidden-import=aiohttp --hidden-import=pandas --add-binary "checkcp311_win_amd64.pyd;." check.py
+       ``` bash
+    pyinstaller --onefile --noconsole --hidden-import=aiohttp --hidden-import=pandas --add-binary "checkcp311_win_amd64.pyd;." check.py
 
-
-This bundles everything into a single .exe located in the dist/ folder.
+To package the executable file together with its data; hidden console window:
 
-📁 Step 6: Final Deployment Folder Structure
+    
+    pyinstaller --onefile --noconsole --hidden-import=aiohttp --hidden-import=pandas --add-binary "checkcp311_win_amd64.pyd;." --add-data "config.json;." check.py
+
+6. Final Deployment Folder
 dist/
 ├── check.exe
-├── config.json   # Manually placed, editable by users
-
-
-
-✅ Summary of What You Achieved
-- ✔️ Obfuscated core logic using Cython
-- ✔️ Converted it into a .pyd extension
-- ✔️ Created a clean launcher script
-- ✔️ Packaged everything into a standalone .exe
-- ✔️ Preserved user-editable config
-- ✔️ Ensured runtime compatibility with aiohttp and pandas
-
-📄 License
-This project is licensed under the MIT License.
-
-👤 Author
-© 2025 Joshua
+├── config.json  ← manually placed, editable by users
+├── time.json 
