@@ -72,6 +72,6 @@ To package the executable file together with its data; hidden console window:
 
 6. Final Deployment Folder
 dist/
-├── check.exe
-├── config.json  ← manually placed, editable by users
-├── time.json 
+├── 'check.exe'
+├── 'config.json'  ← manually placed, editable by users
+├── 'time.json'  ← manually placed, editable by users
