@@ -70,8 +70,9 @@ To package the executable file together with its data; hidden console window:
     
     pyinstaller --onefile --noconsole --hidden-import=aiohttp --hidden-import=pandas --add-binary "checkcp311_win_amd64.pyd;." --add-data "config.json;." check.py
 
-6. Final Deployment Folder
-dist/
-├── 'check.exe'
-├── 'config.json'  ← manually placed, editable by users
-├── 'time.json'  ← manually placed, editable by users
+## 6. Final Deployment Folder
+
+- `dist/`
+  - `check.exe`
+  - `config.json`  ← manually placed, editable by users
+  - `time.json`    ← manually placed, editable by users
